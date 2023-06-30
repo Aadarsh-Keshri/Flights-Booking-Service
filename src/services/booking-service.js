@@ -19,7 +19,7 @@ async function createBooking(data){
         const totalBookingAmount= data.noOfSeats*flightData.price;
         const bookingPayload= {...data,totalCost: totalBookingAmount};
 
-        const booking= await bookingRepository.createBooking(bookingPayload,transaction);
+        const booking= await bookingRepository.create(bookingPayload,transaction);
         await axios.patch(`${ServerConfig.FLIGHT_SERVICE}/api/v1/flights/${data.flightId}/seats`,{
             seats: data.noOfSeats
         });
