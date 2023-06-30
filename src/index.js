@@ -9,6 +9,8 @@ const {ServerConfig/**,Logger*/}=require('./config');   //we don't need to speci
 const apiRoutes = require('./routes');
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 
 app.use('/api',apiRoutes);//any url starting with /api will be redirected to routes folder
 
