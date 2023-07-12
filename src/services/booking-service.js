@@ -4,7 +4,7 @@ const {StatusCodes}=require('http-status-codes');
 const {BookingRepository}=require('../repositories');
 const db=require('../models');
 const AppError=require('../utils/errors/app-error')
-const {ServerConfig}=require('../config')
+const {ServerConfig,Queue}=require('../config')
 
 const {Enums}=require('../utils/common');
 const {BOOKED,CANCELLED}=Enums.BOOKING_STATUS;
@@ -61,6 +61,12 @@ async function makePayment(data){
 
         //we assume here that payment is successful
         await bookingRepository.update(data.bookingId,{status: BOOKED},transaction);
+        Queue.sendData({
+            recepientEmail: 'aadarshcodes@gmail.com',
+            subject: 'Flight booked',
+            text: `Booking Successfully done for the Booking ID: ${data.bookingId}`
+        });
+
         await transaction.commit();
     } catch (error) {
         await transaction.rollback();
